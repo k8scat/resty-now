@@ -2,6 +2,14 @@
 
 OpenResty - Nginx Oauth Wechat
 
+## Notes
+
+#### Should specify `lua_ssl_verify_depth` and `lua_ssl_verify_depth` in site config
+
+error: unable to get local issuer certificate
+
+http://blog.kankanan.com/article/4fee590d-ssl-certificate-problem-unable-to-get-local-issuer-certificate.html
+
 ## Best develop experiment with lua
 
 #### IDEA developer (recommend)
