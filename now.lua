@@ -170,7 +170,7 @@ end
 local function handle_logout()
     if uri == logout_uri then
         ngx.header["Set-Cookie"] = "OauthAccessToken==deleted; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"
-        return ngx.redirect("/")
+        --return ngx.redirect("/")
     end
 end
 

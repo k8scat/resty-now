@@ -2,15 +2,29 @@
 
 OpenResty - Nginx Oauth Wechat
 
-## Notes
+## Start
 
-#### Should specify `lua_ssl_verify_depth` and `lua_ssl_verify_depth` in site config
+Put `now.conf` and `now.lua` in `/usr/local/openresty/nginx/conf/`
 
-error: unable to get local issuer certificate
+```
+# Edit /usr/local/openresty/nginx/conf/nginx.conf
+include /usr/local/openresty/nginx/conf/now.conf;
 
-http://blog.kankanan.com/article/4fee590d-ssl-certificate-problem-unable-to-get-local-issuer-certificate.html
+# Update now.conf
+set $now_corp_id "";
+set $now_agent_id "";
+set $now_secret "";
+set $now_callback_schema "https";
+set $now_callback_host "example.com";
+set $now_callback_uri "/oauth_wechat";
+set $now_logout_uri "/oauth_logout";
+set $now_token_expires "7200";
+set $use_secure_cookie "true";
+access_by_lua_file "/usr/local/openresty/nginx/conf/now.lua";
 
-## Best develop experiment with lua
+```
+
+## Best develop experiment with `lua`
 
 #### IDEA developer (recommend)
 
@@ -38,6 +52,8 @@ but I cannot find an extension for OpenResty snippet.
 yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel
 
 ```
+
+#### VSCode with `Remote - SSH` Extension
 
 ## Install openresty + luarocks
 
@@ -73,7 +89,7 @@ rm -f openresty-1.17.8.2.tar.gz luarocks-3.3.1.tar.gz
 
 ## Enable HTTPS
 
-certbot + letsencrypt
+`certbot` + `letsencrypt`
 
 ```
 # install certbot
@@ -115,6 +131,24 @@ ngx.var.uri == /user
 - [lua-nginx-module](https://github.com/openresty/lua-nginx-module)
 - [lua-resty-http](https://github.com/ledgetech/lua-resty-http)
 - [lua-cjson](https://github.com/mpx/lua-cjson)
+
+## Notes
+
+#### Should specify `lua_ssl_verify_depth` and `lua_ssl_verify_depth` in site config
+
+error: unable to get local issuer certificate
+
+http://blog.kankanan.com/article/4fee590d-ssl-certificate-problem-unable-to-get-local-issuer-certificate.html
+
+#### Alert reverse proxy setup is broken when applied to jenkins
+
+```
+# Set `X-Forwarded-Proto` header
+proxy_set_header   X-Forwarded-Proto $scheme;
+
+```
+
+https://wiki.jenkins.io/display/JENKINS/Jenkins+says+my+reverse+proxy+setup+is+broken
 
 ## Nginx documentation
 
