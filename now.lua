@@ -12,7 +12,8 @@ local callback_scheme = ngx.var.now_callback_scheme or scheme
 local callback_host = ngx.var.now_callback_host
 local callback_uri = ngx.var.now_callback_uri
 local use_secure_cookie = ngx.var.use_secure_cookie == "true" or false
-local whitelist = ngx.var.now_whitelist or ""
+local product_branch_whitelist = ngx.var.now_product_branch_whitelist or ""
+local ip_whitelist = ngx.var.now_ip_whitelist or ""
 local callback_url = callback_scheme .. "://" .. callback_host .. callback_uri
 local redirect_url = callback_scheme .. "://" .. callback_host .. ngx.var.request_uri
 local logout_uri = ngx.var.now_logout_uri or "/logout"
@@ -181,6 +182,11 @@ local function skip_oauth()
     if is_api then
         return true
     end
+
+    if string.find(ip_whitelist, ngx.var.remote_addr) then
+        return true
+    end
+
     local match = ngx.re.match(request_uri, "^/([^/]+)/([^/]+).*$")
     if not match then
         return false
@@ -188,9 +194,9 @@ local function skip_oauth()
     local product = match[1]
     local branch = match[2]
     local search = product .. "|" .. branch
-    local is_in_whitelist = string.find(whitelist, search)
-    ngx.log(ngx.DEBUG, search .. "is in " .. whitelist .. "？" .. tostring(is_in_whitelist))
-    return is_in_whitelist
+    local is_in_product_branch_whitelist = string.find(product_branch_whitelist, search)
+    ngx.log(ngx.DEBUG, search .. "is in " .. product_branch_whitelist .. "？" .. tostring(is_in_product_branch_whitelist))
+    return is_in_product_branch_whitelist
 end
 
 handle_logout()
